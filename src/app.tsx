@@ -10,7 +10,7 @@ export function App() {
 
   function playerChoiceHandler(rowIndex: number, cellIndex: number) {
     if (grid[rowIndex][cellIndex] || winner) {
-      // there is already a value in this cell
+      // there is already a value in this cell or game is over
       return;
     }
 
@@ -47,7 +47,6 @@ export function App() {
   return (
     <div>
       <div className="grid">
-        {!winner && <h3>{`Current turn: ${turn.toUpperCase()}`}</h3>}
         {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="grid-row">
             {row.map((cell, cellIndex) => (
@@ -62,7 +61,7 @@ export function App() {
           </div>
         ))}
       </div>
-      {winner && (
+      {winner ? (
         <div>
           <h2>
             {winner === "draw"
@@ -73,6 +72,8 @@ export function App() {
             Play again?
           </button>
         </div>
+      ) : (
+        <h2>{`Current turn: ${turn.toUpperCase()}`}</h2>
       )}
     </div>
   );
