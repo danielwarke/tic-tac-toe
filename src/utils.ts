@@ -55,7 +55,7 @@ export function getDiagonalWinner(
     return true;
   }
 
-  const reversedGrid = grid.reverse();
+  const reversedGrid = [...grid].reverse();
   if (positions.every((pos) => reversedGrid[pos][pos] === player)) {
     return true;
   }
