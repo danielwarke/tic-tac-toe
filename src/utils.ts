@@ -1,16 +1,22 @@
-import { TicTacToeGrid, TicTacToePlayer, emptyGrid } from "./types";
+import { TicTacToeGrid, TicTacToePlayer } from "./types";
 
 export function getWinner(grid: TicTacToeGrid) {
   const players: TicTacToePlayer[] = ["x", "o"];
 
   for (const player of players) {
     if (
-      getRowWinner(grid, player) &&
-      getColumnWinner(grid, player) &&
+      getRowWinner(grid, player) ||
+      getColumnWinner(grid, player) ||
       getDiagonalWinner(grid, player)
     ) {
       return player;
     }
+  }
+
+  const gameInProgress = grid.some((row) => row.some((val) => val === null));
+  if (!gameInProgress) {
+    // game is a draw
+    return false;
   }
 
   return null;
@@ -27,15 +33,16 @@ export function getRowWinner(grid: TicTacToeGrid, player: TicTacToePlayer) {
 }
 
 export function getColumnWinner(grid: TicTacToeGrid, player: TicTacToePlayer) {
-  const transformedGrid = emptyGrid;
+  const rotatedGrid: ("x" | "o" | null)[][] = [];
 
   for (let i = 0; i < grid.length; i++) {
+    rotatedGrid.push([]);
     for (let j = 0; j < grid[i].length; j++) {
-      transformedGrid[j][i] = grid[i][j];
+      rotatedGrid[i].push(grid[j][i]);
     }
   }
 
-  return getRowWinner(transformedGrid, player);
+  return getRowWinner(rotatedGrid as TicTacToeGrid, player);
 }
 
 export function getDiagonalWinner(
@@ -48,7 +55,8 @@ export function getDiagonalWinner(
     return true;
   }
 
-  if (positions.reverse().every((pos) => grid[pos][pos] === player)) {
+  const reversedGrid = grid.reverse();
+  if (positions.every((pos) => reversedGrid[pos][pos] === player)) {
     return true;
   }
 
